@@ -14,9 +14,18 @@ class ComplexController extends Controller
     public function get(Request $request)
     {
         return Inertia::render("Complexes", [
-            "complexes" => Complex::where("company_id", $request->user()->company_id)->orderBy('created_at', 'desc')->get()
+            "complexes" => Complex::where("company_id", $request->user()->company_id)
+                ->when($request->search, function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%");
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate(3)
+                ->withQueryString(),
+            "search" => $request->search,
         ]);
     }
+
+
 
     public function show($id, Request $request)
     {

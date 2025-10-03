@@ -1,5 +1,6 @@
 <script setup>
 import CourtDataViewComponent from '@/Components/CourtDataViewComponent.vue';
+import SearchComponent from '@/Components/SearchComponent.vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
@@ -7,9 +8,12 @@ const props = defineProps({
     courts: {
         type: Array,
         required: true
+    },
+    search: {
+        type: String,
+        default: ''
     }
 });
-
 </script>
 
 <template>
@@ -18,9 +22,16 @@ const props = defineProps({
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between">
-                <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                    Courts
-                </h2>
+                <div class="flex space-x-8">
+                    <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                        Courts
+                    </h2>
+                    <SearchComponent 
+                        placeholder="Search courts..."
+                        search-route="/courts"
+                        :initial-query="search"
+                    />
+                </div>
                 <div>
                     <Link 
                         :href="`/create-courts`" 
@@ -37,8 +48,6 @@ const props = defineProps({
                 <div style="display: flex; flex-wrap: wrap; gap: 16px;">
                     <CourtDataViewComponent v-for="court in courts" :key="court.id" :court="court" />
                 </div>
-                <!-- <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-                </div> -->
             </div>
         </div>
     </AuthenticatedLayout>
