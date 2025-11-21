@@ -29,15 +29,27 @@ class CourtController extends Controller
 
     public function getCourt(Request $request, Court $court)
     {
-        return Inertia::render('Court', [
-            'court' => Court::with(['court_type', 'surface_type', 'sections'])->where('id',$court->id)
+        // Verify the court belongs to the user's company
+        $court = Court::with(['court_type', 'surface_type', 'sections', 'image', 'images', 'complex'])
+            ->where('id', $court->id)
             ->whereHas('complex', function ($query) use ($request) {
                 $query->where('company_id', $request->user()->company_id);
             })
-            ->orderBy('created_at', 'desc')
-            ->firstOrFail()
+            ->firstOrFail();
+
+        // Get reservations for this court with customer and section data
+        $reservations = $court->reservations()
+            ->with(['customer', 'section'])
+            ->orderBy('reservation_date', 'desc')
+            ->orderBy('start_time', 'desc')
+            ->get();
+
+        return Inertia::render('Court', [
+            'court' => $court,
+            'reservations' => $reservations
         ]);
     }
+
 
     public function getCourtReservations(Request $request, Court $court)
     {
@@ -77,10 +89,10 @@ class CourtController extends Controller
         return redirect()->route('court.index')->with('success', 'Court updated successfully.');
     }
 
-    public function getCreateCourtPage(Request $request)
+    public function getCreateCourtPage(Complex $complex, Request $request)
     {
         return Inertia::render('CreateCourts', [
-            'complexes' => Complex::where('company_id', $request->user()->company_id)->get(),
+            'complex' => $complex,
             'surface_types' => SurfaceType::with('court_types')->get(),
             'court_types' => CourtType::with('surface_types')->get()
         ]);

@@ -25,14 +25,19 @@ class ComplexController extends Controller
         ]);
     }
 
-
-
     public function show($id, Request $request)
     {
-        $complex = Complex::where('company_id', $request->user()->company_id)->with(['company', 'courts'])->findOrFail($id);
+        $complex = Complex::where('company_id', $request->user()->company_id)
+            ->with(['company', 'image', 'images'])
+            ->findOrFail($id);
+
+        $courts = $complex->courts()
+            ->with(['court_type', 'surface_type'])
+            ->paginate(9);
 
         return Inertia::render('Complex', [
-            'complex' => $complex
+            'complex' => $complex,
+            'courts' => $courts
         ]);
     }
 

@@ -5,8 +5,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 
 const props = defineProps({
-    complexes: {
-        type: Array,
+    complex: {
+        type: Object,
         required: true
     },
     court_types: {
@@ -19,7 +19,7 @@ const props = defineProps({
     },
 });
 
-const complexes = ref(props.complexes);
+const complex = ref(props.complex);
 const surfaceTypes = ref(props.surface_types);
 const courtTypes = ref(props.court_types);
 
@@ -27,7 +27,7 @@ const courtTypes = ref(props.court_types);
 const form = useForm({
     name: '',
     description: '',
-    complex_id: null,
+    complex_id: props.complex.id,
     surface_type_id: null,
     court_type_id: null,
     hourly_rate: '',
@@ -98,7 +98,7 @@ const handleSubmit = () => {
                                 required></textarea>
                         </div>
 
-                        <div>
+                        <!-- <div>
                             <label for="complex"
                                 class="block text-sm font-medium text-gray-700 dark:text-gray-300">Complex</label>
                             <select id="complex" v-model="form.complex_id"
@@ -109,6 +109,11 @@ const handleSubmit = () => {
                                     {{ complex.name }}
                                 </option>
                             </select>
+                        </div> -->
+                        <div class="">
+                                                        <label for="complex"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Complex</label>
+                                <div class="">{{ complex.name }}</div>
                         </div>
 
                         <div>
