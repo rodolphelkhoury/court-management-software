@@ -77,10 +77,10 @@ class CourtController extends Controller
         return redirect()->route('court.index')->with('success', 'Court updated successfully.');
     }
 
-    public function getCreateCourtPage(Request $request)
+    public function getCreateCourtPage(Complex $complex, Request $request)
     {
         return Inertia::render('CreateCourts', [
-            'complexes' => Complex::where('company_id', $request->user()->company_id)->get(),
+            'complex' => $complex,
             'surface_types' => SurfaceType::with('court_types')->get(),
             'court_types' => CourtType::with('surface_types')->get()
         ]);

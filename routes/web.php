@@ -18,18 +18,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/courts', [CourtController::class, 'getCourts'])->name('court.index');
     Route::get('/courts/{court}', [CourtController::class, 'getCourt'])->name('court.show');
-    Route::get('/create-courts', [CourtController::class, 'getCreateCourtPage'])->name('get.create.court');
     Route::get('/courts/{court}/reservations', [CourtController::class, 'getCourtReservations'])->name('court.get.reservations');
-
+    
     Route::get('/reservations/{reservation}', [ReservationController::class, 'get'])->name('get.reservation');
     Route::put('/reservations/{reservation}/update-is-no-show-status', [ReservationController::class, 'updateIsNoShowStatus']);
     Route::put('/reservations/{reservation}/update-is-canceled-status', [ReservationController::class, 'updateIsCanceledStatus']);
     Route::get('/reservations/{reservation}/invoice', [ReservationController::class, 'getInvoice'])->name('reservation.invoice');
-
+    
     Route::put('/reservations/{reservation}/invoices/{invoice}/update-status', [ReservationController::class, 'updateInvoiceStatus']);
     Route::get('/reservations/{reservation}/invoices/{invoice}/generate-pdf', [ReservationController::class, 'generatePdf']);
-
-
+    
     
     Route::post('/courts', [CourtController::class, 'store'])->name('court.store');
     Route::put('/courts/{court}', [CourtController::class, 'update'])->name('court.update');
@@ -37,6 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/complexes', [ComplexController::class, 'get'])->name('complex.index');
     Route::get('/complexes/{id}', [ComplexController::class, 'show'])->name('complexes.show');
     Route::get('/complexes/{complex}/courts', [ComplexController::class, 'getComplexCourts'])->name('complex.courts.index');
+    Route::get('/complexes/{complex}/courts/create', [CourtController::class, 'getCreateCourtPage'])->name('get.create.court');
     Route::get('/create-complexes', [ComplexController::class, 'getCreateComplexPage'])->name('get.create.complex');
     Route::post('/complexes', [ComplexController::class, 'store'])->name('complex.store');
     Route::put('/complexes/{complex}', [ComplexController::class, 'update'])->name('complex.update');
