@@ -28,7 +28,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/reservations/{reservation}/invoices/{invoice}/update-status', [ReservationController::class, 'updateInvoiceStatus']);
     Route::get('/reservations/{reservation}/invoices/{invoice}/generate-pdf', [ReservationController::class, 'generatePdf']);
     
-    
     Route::post('/courts', [CourtController::class, 'store'])->name('court.store');
     Route::put('/courts/{court}', [CourtController::class, 'update'])->name('court.update');
     
