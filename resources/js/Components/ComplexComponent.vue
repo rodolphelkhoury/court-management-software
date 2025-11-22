@@ -48,12 +48,6 @@ const formatCoordinate = (coord, type) => {
                 <!-- Overlay gradient -->
                 <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                 
-                <!-- Status badge (if available) -->
-                <div class="absolute top-4 right-4">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/90 text-gray-800 backdrop-blur-sm">
-                        Active
-                    </span>
-                </div>
             </div>
 
             <!-- Content Section -->
@@ -107,12 +101,12 @@ const formatCoordinate = (coord, type) => {
                         </div>
                         
                         <!-- View details arrow -->
-                        <div class="flex items-center text-indigo-600 dark:text-indigo-400 text-sm font-medium">
+                        <!-- <div class="flex items-center text-indigo-600 dark:text-indigo-400 text-sm font-medium">
                             <span class="mr-1">View Details</span>
                             <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                             </svg>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

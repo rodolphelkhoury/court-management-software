@@ -16,7 +16,7 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'getDashboard'])->name('dashboard');
 
-    Route::get('/courts', [CourtController::class, 'getCourts'])->name('court.index');
+    // Route::get('/courts', [CourtController::class, 'getCourts'])->name('court.index');
     Route::get('/courts/{court}', [CourtController::class, 'getCourt'])->name('court.show');
     Route::get('/courts/{court}/reservations', [CourtController::class, 'getCourtReservations'])->name('court.get.reservations');
     

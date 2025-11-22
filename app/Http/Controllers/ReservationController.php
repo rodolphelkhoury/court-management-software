@@ -180,7 +180,8 @@ class ReservationController extends Controller
         $reservation->total_price = $total_price;
 
         $reservation->save();
-        return redirect()->route('court.get.reservations', ['court' => $court->id])->with('success', 'Reservation created successfully.');
+        //
+        return redirect()->route('court.show', ['court' => $court->id])->with('success', 'Reservation created successfully.');
     }
 
     public function updateIsCanceledStatus(Reservation $reservation, Request $request)

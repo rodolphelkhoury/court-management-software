@@ -19,7 +19,7 @@ class ComplexController extends Controller
                     $query->where('name', 'like', "%{$search}%");
                 })
                 ->orderBy('created_at', 'desc')
-                ->paginate(3)
+                ->paginate(10)
                 ->withQueryString(),
             "search" => $request->search,
         ]);
