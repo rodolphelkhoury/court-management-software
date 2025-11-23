@@ -33,11 +33,22 @@ class ComplexController extends Controller
 
         $courts = $complex->courts()
             ->with(['court_type', 'surface_type'])
-            ->paginate(9);
+            ->when($request->search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhereHas('court_type', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('surface_type', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    });
+            })
+            ->paginate(9)
+            ->withQueryString(); // keeps the search param in pagination links
 
         return Inertia::render('Complex', [
             'complex' => $complex,
-            'courts' => $courts
+            'courts' => $courts,
+            'search' => $request->search, // pass search to frontend
         ]);
     }
 
