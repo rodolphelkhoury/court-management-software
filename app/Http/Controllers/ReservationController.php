@@ -21,12 +21,19 @@ class ReservationController extends Controller
         $court = $reservation->court()->firstOrFail();
         $complex = $court->complex()->firstOrFail();
         $user = $request->user();
+
         if ($complex->company_id != $user->company_id) {
             abort(401, "Unauthorized");
         }
 
-        return Inertia::render('Reservation', ['reservation' => $reservation->load('customer', 'court', 'section')]);
+        $invoice = $reservation->invoice()->with('customer')->first();
+
+        return Inertia::render('Reservation', [
+            'reservation' => $reservation->load('customer', 'court', 'section'),
+            'invoice' => $invoice,
+        ]);
     }
+
 
     public function getCreateReservationPage(Court $court, Request $request)
     {
