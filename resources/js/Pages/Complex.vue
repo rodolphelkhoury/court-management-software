@@ -1,6 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import SearchComponent from '@/Components/SearchComponent.vue';
 
 const props = defineProps({
     complex: {
@@ -11,6 +12,11 @@ const props = defineProps({
         type: Object, // pagination object
         required: false,
         default: () => ({ data: [] })
+    },
+    search: {
+        type: String,
+        required: false,
+        default: ''
     }
 });
 
@@ -124,10 +130,23 @@ const formatCurrency = (value) => {
 
                 <!-- Courts Section -->
                 <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                    <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center">
-                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-                            Courts
-                        </h2>
+                    <!-- Courts Section Header -->
+                    <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="flex items-center gap-4">
+                            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                Courts
+                            </h2>
+    
+                            <!-- Search Bar -->
+                            <div class="w-full md:w-64">
+                                <SearchComponent
+                                    placeholder="Search courts..."
+                                    :search-route="`/complexes/${complex.id}`"
+                                    :initial-query="search"
+                                />
+                            </div>
+                        </div>
+
                         <Link :href="`/complexes/${complex.id}/courts/create`"
                             class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -196,7 +215,8 @@ const formatCurrency = (value) => {
                         </div>
 
                         <!-- Pagination -->
-                        <div v-if="courts.links && courts.links.length > 3" class="mt-8">
+                       <!-- Pagination - Show when there's more than 1 page -->
+                        <div v-if="courts.last_page > 1" class="mt-8">
                             <nav class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 px-0 sm:px-4">
                                 <!-- Mobile: Compact Previous/Next -->
                                 <div class="flex w-full justify-between -mt-px md:hidden pt-4">
@@ -218,14 +238,11 @@ const formatCurrency = (value) => {
                                     </span>
 
                                     <div class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        <template v-for="(link, index) in courts.links" :key="index">
-                                            <span v-if="link.active && !isNavButton(link.label)" class="flex items-center">
-                                                Page
-                                                <span class="mx-1 px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 rounded font-semibold">
-                                                    {{ link.label }}
-                                                </span>
-                                            </span>
-                                        </template>
+                                        Page
+                                        <span class="mx-1 px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 rounded font-semibold">
+                                            {{ courts.current_page }}
+                                        </span>
+                                        of {{ courts.last_page }}
                                     </div>
 
                                     <Link
@@ -310,26 +327,10 @@ const formatCurrency = (value) => {
                             </nav>
                         </div>
                     </div>
-
-                    <!-- Empty State -->
-                    <div v-else class="p-12 text-center">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
-                        </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No courts</h3>
-                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Get started by adding a new court to this complex.</p>
-                        <div class="mt-6">
-                            <Link :href="`/complexes/${complex.id}/courts/create`"
-                                class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                                </svg>
-                                Add Court
-                            </Link>
-                        </div>
+                    <div v-else class="p-6 text-gray-500 dark:text-gray-400 text-center">
+                        No courts found.
                     </div>
                 </div>
-
             </div>
         </div>
     </AuthenticatedLayout>
