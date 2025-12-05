@@ -5,6 +5,8 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue'; // Added
+
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
@@ -33,14 +35,20 @@ const submit = () => {
     <GuestLayout>
         <Head title="Log in" />
 
+        <!-- Laravel Application Logo -->
+        <div class="flex justify-center mb-6">
+            <ApplicationLogo class="w-20 h-20 text-gray-500 dark:text-gray-400" />
+        </div>
+
+        <!-- Status message -->
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}
         </div>
 
         <form @submit.prevent="submit">
+            <!-- Email -->
             <div>
                 <InputLabel for="email" value="Email" />
-
                 <TextInput
                     id="email"
                     type="email"
@@ -50,13 +58,12 @@ const submit = () => {
                     autofocus
                     autocomplete="username"
                 />
-
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
+            <!-- Password -->
             <div class="mt-4">
                 <InputLabel for="password" value="Password" />
-
                 <TextInput
                     id="password"
                     type="password"
@@ -65,19 +72,20 @@ const submit = () => {
                     required
                     autocomplete="current-password"
                 />
-
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
+            <!-- Remember Me -->
             <div class="mt-4 block">
                 <label class="flex items-center">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400"
-                        >Remember me</span
-                    >
+                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">
+                        Remember me
+                    </span>
                 </label>
             </div>
 
+            <!-- Actions -->
             <div class="mt-4 flex items-center justify-end">
                 <Link
                     v-if="canResetPassword"

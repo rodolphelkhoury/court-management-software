@@ -135,13 +135,13 @@ const generatePDF = () => {
                     </button>
 
                     <!-- Cancel -->
-                    <button 
+                    <!-- <button 
                         v-else 
                         @click="cancelReservation" 
                         type="button"
                         class="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 transition">
                         {{ reservation.is_canceled ? "Undo Cancellation" : "Cancel Reservation" }}
-                    </button>
+                    </button> -->
 
                     <!-- Invoice Actions (if invoice exists) -->
                     <template v-if="invoice">

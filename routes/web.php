@@ -4,14 +4,19 @@ use App\Http\Controllers\ComplexController;
 use App\Http\Controllers\CourtController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SectionController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', function () {
-    return redirect()->route('complex.index');
-});
+    return Inertia::render('Landing');
+})->name('landing');
+
+// Contact form route
+Route::post('/contact/send', [MailController::class, 'sendContactEmail'])->name('contact.send');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'getDashboard'])->name('dashboard');

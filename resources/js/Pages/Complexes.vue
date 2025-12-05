@@ -28,11 +28,14 @@ const isNavButton = (label) => {
         <!-- Header -->
         <template #header>
             <div class="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
-                <div class="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-8 sm:items-center">
+                <!-- Title + Search -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-3 sm:space-y-0 w-full sm:w-auto">
                     <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                         Complexes
                     </h2>
-                    <div class="w-full sm:w-auto">
+                    
+                    <!-- Search bar -->
+                    <div class="w-full sm:w-64">
                         <SearchComponent 
                             placeholder="Search complexes..."
                             search-route="/complexes"
@@ -40,11 +43,12 @@ const isNavButton = (label) => {
                         />
                     </div>
                 </div>
-                
-                <div class="flex justify-end sm:justify-start">
+
+                <!-- Add Complex Button -->
+                <div class="w-full sm:w-auto flex justify-center sm:justify-start">
                     <Link 
                         :href="`/create-complexes`" 
-                        class="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors whitespace-nowrap"
+                        class="w-full inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors whitespace-nowrap"
                     >
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />

@@ -2,17 +2,13 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Seeder;
+use App\Models\{
+    Complex, Court, CourtType, Image, SurfaceType
+};
 use App\Domain\CourtType\Enums\CourtTypeName;
 use App\Domain\SurfaceType\Enums\SurfaceTypeName;
-use Illuminate\Database\Seeder;
-use App\Models\Complex;
-use App\Models\Court;
-use App\Models\CourtType;
-use App\Models\Image;
-use App\Models\SurfaceType;
-use App\Models\Reservation;
 use Faker\Factory as Faker;
-use Carbon\Carbon;
 
 class CourtSeeder extends Seeder
 {
@@ -22,251 +18,213 @@ class CourtSeeder extends Seeder
 
         $allowedDurations = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
 
+        /** -----------------------------------------
+         *  PRELOAD TYPES
+         * ----------------------------------------*/
+        $courtTypes = CourtType::pluck('id', 'name');
+        $surfaceTypes = SurfaceType::pluck('id', 'name');
+
+        /** -----------------------------------------
+         *  COMPLEXES (Lebanon only)
+         * ----------------------------------------*/
+        $complexData = [
+            [
+                'name' => 'Phoenix Sports Complex – Dekwaneh',
+                'description' => 'A modern multi-sport center located in the heart of Dekwaneh with indoor and outdoor facilities.',
+                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20144217.png?csf=1&web=1&e=0VJvqb',
+                'lat' => 33.89244, 'lng' => 35.54401,
+            ],
+            [
+                'name' => 'Summit Athletic Center – Antelias',
+                'description' => 'Premium athletic venue offering basketball, padel, and tennis training.',
+                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20144333.png?csf=1&web=1&e=NplM30',
+                'lat' => 33.91312, 'lng' => 35.57992,
+            ],
+            [
+                'name' => 'Greenfield Sports Hub – Baabdat',
+                'description' => 'A nature-surrounded sports hub with high-quality turf and open-air courts.',
+                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20144843.png?csf=1&web=1&e=ebPhR9',
+                'lat' => 33.93142, 'lng' => 35.67111,
+            ],
+            [
+                'name' => 'Metro Active Arena – Sin el Fil',
+                'description' => 'Indoor and rooftop courts designed for fast-paced games and professional matches.',
+                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20145046.png?csf=1&web=1&e=dBSKUu',
+                'lat' => 33.88171, 'lng' => 35.52894,
+            ],
+            [
+                'name' => 'Horizon Sports Village – Jounieh',
+                'description' => 'A wide sports village offering football, tennis and basketball courts.',
+                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20144109.png?csf=1&web=1&e=1WYGiX',
+                'lat' => 33.97212, 'lng' => 35.62981,
+            ],
+            [
+                'name' => 'Cedars Court Center – Zalka',
+                'description' => 'A premium indoor courts center with advanced lighting and modern amenities.',
+                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20143300.png?csf=1&web=1&e=4YQRbw',
+                'lat' => 33.89452, 'lng' => 35.54811,
+            ],
+            [
+                'name' => 'North Star Sports Arena – Tripoli',
+                'description' => 'The top sports destination in North Lebanon with multiple training fields.',
+                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20143146.png?csf=1&web=1&e=s5sOlW',
+                'lat' => 34.43901, 'lng' => 35.83410,
+            ],
+            [
+                'name' => 'Legacy Sports Dome – Hazmieh',
+                'description' => 'A modern dome complex with indoor basketball, futsal, and tennis.',
+                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20142959.png?csf=1&web=1&e=SW60MU',
+                'lat' => 33.85831, 'lng' => 35.52941,
+            ],
+            [
+                'name' => 'Golden Field Club – Mansourieh',
+                'description' => 'A recently renovated sports center with premium synthetic turf courts.',
+                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20142706.png?csf=1&web=1&e=TVfcyS',
+                'lat' => 33.85412, 'lng' => 35.56758,
+            ],
+            [
+                'name' => 'Mirage Sports Park – Broummana',
+                'description' => 'Open-air courts surrounded by mountain views. Ideal for tournaments.',
+                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20145145.png?csf=1&web=1&e=qpI1Gf',
+                'lat' => 33.89601, 'lng' => 35.62771,
+            ],
+        ];
+
         $complexes = collect();
-        for ($i = 1; $i <= 5; $i++) {
-            $complexes->push(Complex::create([
+
+        foreach ($complexData as $cx) {
+            $created = Complex::create([
                 'company_id' => 1,
-                'name' => "Complex $i",
-                'description' => "asdfasfda",
+                'name' => $cx['name'],
+                'description' => $cx['description'],
                 'line1' => $faker->streetAddress,
                 'line2' => $faker->secondaryAddress,
-                'city' => $faker->city,
-                'country' => $faker->country,
-                'latitude' => $faker->latitude,
-                'longitude' => $faker->longitude,
-            ]));
+                'city' => 'Lebanon',
+                'country' => 'Lebanon',
+                'latitude' => $cx['lat'],
+                'longitude' => $cx['lng'],
+            ]);
+
+            Image::create([
+                'disk' => 'public',
+                'name' => 'primary',
+                'filepath' => $cx['image'],
+                'mimetype' => 'png',
+                'width' => 500,
+                'height' => 300,
+                'filesize' => 500,
+                'owner_type' => Complex::class,
+                'owner_id' => $created->id,
+            ]);
+
+            $complexes->push($created);
         }
 
-        $rebound_court = Court::create([
-            'complex_id' => $complexes->random()->id,
-            'court_type_id' => CourtType::where('name', CourtTypeName::BASKETBALL->value)->first()->id,
-            'surface_type_id' => SurfaceType::where('name', SurfaceTypeName::HARD_ACRYLIC->value)->first()->id,
-            'name' => 'Rebound Club',
-            'description' => 'Indoor basketball with acrylic surface and modern vibes.',
-            'hourly_rate' => 10,
-            'divisible' => (bool) rand(0, 1),
-            'max_divisions' => rand(1, 4),
-            'opening_time' => '08:00:00',
-            'closing_time' => '22:00:00',
-            'reservation_duration' => $faker->randomElement($allowedDurations),
-            'longitude' => 35.569310079703214,
-            'latitude' => 33.89134451178183, 
-            'address_line' => 'beirut, jdeideh'
-        ]);
 
-        Image::create([
-            'disk' => 'public',
-            'name' => 'primary',
-            'filepath' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqPFUxIlKiNL7oRLwnZrO3iJ0duozmL5ZqhQ&s',
-            'mimetype' => 'png',
-            'width' => 500,
-            'height' => 200,
-            'filesize' => 500,
-            'owner_type' => $rebound_court::class,
-            'owner_id' => $rebound_court->id
-        ]);
+        /** -----------------------------------------
+         *  HELPER TO CREATE COURTS
+         * ----------------------------------------*/
+        $createCourt = function (array $data, $complex) use ($allowedDurations, $faker) {
 
-        $fc_stadium_court = Court::create([
-            'complex_id' => $complexes->random()->id,
-            'court_type_id' => CourtType::where('name', CourtTypeName::SOCCER->value)->first()->id,
-            'surface_type_id' => SurfaceType::where('name', SurfaceTypeName::GRASS_SYNTHETIC->value)->first()->id,
-            'name' => 'FCSTADIUM',
-            'description' => 'Top-tier soccer on synthetic grass fields.',
-            'hourly_rate' => 5,
-            'divisible' => (bool) rand(0, 1),
-            'max_divisions' => rand(1, 4),
-            'opening_time' => '08:00:00',
-            'closing_time' => '23:00:00',
-            'reservation_duration' => $faker->randomElement($allowedDurations), 
-            'longitude' => 35.55193522379884,
-            'latitude' => 33.88392238125481,
-            'address_line' => 'beirut, dekwaneh'
-        ]);
+            $court = Court::create([
+                'complex_id' => $complex->id,
+                'court_type_id' => $data['court_type_id'],
+                'surface_type_id' => $data['surface_type_id'],
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'hourly_rate' => $data['hourly_rate'],
+                'divisible' => rand(0,1),
+                'max_divisions' => rand(1,4),
+                'opening_time' => '08:00:00',
+                'closing_time' => '23:00:00',
+                'reservation_duration' => $faker->randomElement($allowedDurations),
+                'longitude' => $complex->longitude + ($faker->randomFloat(5, -0.002, 0.002)),
+                'latitude'  => $complex->latitude + ($faker->randomFloat(5, -0.002, 0.002)),
+                'address_line' => $complex->name,
+            ]);
 
-        Image::create([
-            'disk' => 'public',
-            'name' => 'primary',
-            'filepath' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEcBOdsJO7rmmd2FZ-7ifAASQ7l0VDENTf9VP1zOk2Wfzm4FYmhNm5TC5WdTbSdcDUFrc&usqp=CAU',
-            'mimetype' => 'png',
-            'width' => 500,
-            'height' => 200,
-            'filesize' => 500,
-            'owner_type' => $fc_stadium_court::class,
-            'owner_id' => $fc_stadium_court->id
-        ]);
+            Image::create([
+                'disk' => 'public',
+                'name' => 'primary',
+                'filepath' => $data['image'],
+                'mimetype' => 'png',
+                'width' => 500,
+                'height' => 200,
+                'filesize' => 500,
+                'owner_type' => Court::class,
+                'owner_id' => $court->id
+            ]);
+        };
 
-        $oppa_club_court = Court::create([
-            'complex_id' => $complexes->random()->id,
-            'court_type_id' => CourtType::where('name', CourtTypeName::SOCCER->value)->first()->id,
-            'surface_type_id' => SurfaceType::where('name', SurfaceTypeName::GRASS_NATURAL->value)->first()->id,
-            'name' => 'OPPA CLUB',
-            'description' => 'Classic soccer court with natural grass experience.',
-            'hourly_rate' => 25,
-            'divisible' => (bool) rand(0, 1),
-            'max_divisions' => rand(1, 4),
-            'opening_time' => '08:00:00',
-            'closing_time' => '23:00:00',
-            'reservation_duration' => $faker->randomElement($allowedDurations),
-            'longitude' => 35.560716282447956,
-            'latitude' => 33.892653679241505,
-            'address_line' => 'beirut, baouchriyeh'
-        ]);
 
-        Image::create([
-            'disk' => 'public',
-            'name' => 'primary',
-            'filepath' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2IjVvClvIHzHZolq7dPn4EtX_Y_FxW40MSA&s',
-            'mimetype' => 'png',
-            'width' => 500,
-            'height' => 200,
-            'filesize' => 500,
-            'owner_type' => $oppa_club_court::class,
-            'owner_id' => $oppa_club_court->id
-        ]);
+        /** -----------------------------------------
+         *  COURTS PER COMPLEX (3–5 each)
+         * ----------------------------------------*/
+        $courtLibrary = [
 
-        $paddle_house_court = Court::create([
-            'complex_id' => $complexes->random()->id,
-            'court_type_id' => CourtType::where('name', CourtTypeName::PADEL->value)->first()->id,
-            'surface_type_id' => SurfaceType::where('name', SurfaceTypeName::SYNTHETIC_RUBBER->value)->first()->id,
-            'name' => 'Padel House',
-            'description' => 'Classic padel court.',
-            'hourly_rate' => 15,
-            'divisible' => (bool) rand(0, 1),
-            'max_divisions' => rand(1, 4),
-            'opening_time' => '08:00:00',
-            'closing_time' => '23:00:00',
-            'reservation_duration' => $faker->randomElement($allowedDurations),
-            'longitude' => 35.56679876612841,
-            'latitude' => 33.89982744957849,
-            'address_line' => 'beirut, dekwaneh'
-        ]);
+            // Basketball
+            [
+                'type' => CourtTypeName::BASKETBALL->value, 'surface' => SurfaceTypeName::HARD_ACRYLIC->value,
+                'name' => 'Arena Court', 'rate' => 18,
+                'desc' => 'Indoor basketball court with pro lighting.',
+                'img'  => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20141645.png?csf=1&web=1&e=VkxdiU'
+            ],
 
-        Image::create([
-            'disk' => 'public',
-            'name' => 'primary',
-            'filepath' => 'https://lh3.googleusercontent.com/p/AF1QipMgEILqeHGL2pnAHr2uJ1B6_ItkPdREm9r8OWte=w426-h240-k-no',
-            'mimetype' => 'png',
-            'width' => 500,
-            'height' => 200,
-            'filesize' => 500,
-            'owner_type' => $paddle_house_court::class,
-            'owner_id' => $paddle_house_court->id
-        ]);
+            // Soccer
+            [
+                'type' => CourtTypeName::SOCCER->value, 'surface' => SurfaceTypeName::GRASS_SYNTHETIC->value,
+                'name' => 'Elite Turf Field', 'rate' => 22,
+                'desc' => 'Full-sized synthetic soccer field.',
+                'img'  => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20135036.png?csf=1&web=1&e=PP4TvL'
+            ],
 
-        $the_v_club = Court::create([
-            'complex_id' => $complexes->random()->id,
-            'court_type_id' => CourtType::where('name', CourtTypeName::TENNIS->value)->first()->id,
-            'surface_type_id' => SurfaceType::where('name', SurfaceTypeName::HARD_ACRYLIC->value)->first()->id,
-            'name' => 'The V Club',
-            'description' => 'Classic tennis court on hard acrylic ground.',
-            'hourly_rate' => 30,
-            'divisible' => (bool) rand(0, 1),
-            'max_divisions' => rand(1, 4),
-            'opening_time' => '08:00:00',
-            'closing_time' => '23:00:00',
-            'reservation_duration' => $faker->randomElement($allowedDurations),
-            'longitude' => 35.583691381556115,
-            'latitude' => 33.91073267926788,
-            'address_line' => 'antelias'
-        ]);
+            // Padel
+            [
+                'type' => CourtTypeName::PADEL->value, 'surface' => SurfaceTypeName::SYNTHETIC_RUBBER->value,
+                'name' => 'Padel Pro Court', 'rate' => 14,
+                'desc' => 'Modern padel court with panoramic walls.',
+                'img'  => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20141840.png?csf=1&web=1&e=OuWOGg'
+            ],
 
-        Image::create([
-            'disk' => 'public',
-            'name' => 'primary',
-            'filepath' => 'https://lh3.googleusercontent.com/gps-cs-s/AB5caB_nCXZ35NU7nMuq7bJBUCJPZD1KGxDolpI16BxlfnOjqVCIO6hvhGbecl2Kl85t_Qq65G4gRSoWRofGhog1T_HQYaODxlBY7tgJNgW6mD6oqr4uXeiufgC0yZezJFBDY3eIpUk=w408-h306-k-no',
-            'mimetype' => 'png',
-            'width' => 500,
-            'height' => 200,
-            'filesize' => 500,
-            'owner_type' => $the_v_club::class,
-            'owner_id' => $the_v_club->id
-        ]);
+            // Tennis
+            [
+                'type' => CourtTypeName::TENNIS->value, 'surface' => SurfaceTypeName::HARD_ACRYLIC->value,
+                'name' => 'Grand Slam Court', 'rate' => 20,
+                'desc' => 'Professional-grade tennis court.',
+                'img'  => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20142103.png?csf=1&web=1&e=DyCkrU'
+            ],
 
-        $elite_court = Court::create([
-            'complex_id' => $complexes->random()->id,
-            'court_type_id' => CourtType::where('name', CourtTypeName::SOCCER->value)->first()->id,
-            'surface_type_id' => SurfaceType::where('name', SurfaceTypeName::SYNTHETIC_RUBBER->value)->first()->id,
-            'name' => '5-18 Elite Football Academy',
-            'description' => 'Classic soccer court on synthetic rubber ground.',
-            'hourly_rate' => 8,
-            'divisible' => (bool) rand(0, 1),
-            'max_divisions' => rand(1, 4),
-            'opening_time' => '08:00:00',
-            'closing_time' => '20:00:00',
-            'reservation_duration' => $faker->randomElement($allowedDurations),
-            'longitude' => 35.549386164258955,
-            'latitude' => 33.87712173648952,
-            'address_line' => 'beirut, dekwaneh'
-        ]);
+            // Volleyball
+            [
+                'type' => CourtTypeName::VOLLEYBALL->value, 'surface' => SurfaceTypeName::HARD_ASPHALT->value,
+                'name' => 'Volley Zone', 'rate' => 12,
+                'desc' => 'Training-friendly volleyball ground.',
+                'img'  => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20142202.png?csf=1&web=1&e=41n9wU'
+            ],
+        ];
 
-        Image::create([
-            'disk' => 'public',
-            'name' => 'primary',
-            'filepath' => 'https://lh3.googleusercontent.com/p/AF1QipPV36Abd9-X9LJigE_rozBthMLtuubHyjMAATnB=w426-h240-k-no',
-            'mimetype' => 'png',
-            'width' => 500,
-            'height' => 200,
-            'filesize' => 500,
-            'owner_type' => $elite_court::class,
-            'owner_id' => $elite_court->id
-        ]);
 
-        $clutch_court = Court::create([
-            'complex_id' => $complexes->random()->id,
-            'court_type_id' => CourtType::where('name', CourtTypeName::BASKETBALL->value)->first()->id,
-            'surface_type_id' => SurfaceType::where('name', SurfaceTypeName::HARD_ASPHALT->value)->first()->id,
-            'name' => 'Clutch',
-            'description' => 'Classic basketball court on synthetic rubber ground.',
-            'hourly_rate' => 22,
-            'divisible' => (bool) rand(0, 1),
-            'max_divisions' => rand(1, 4),
-            'opening_time' => '08:00:00',
-            'closing_time' => '21:00:00',
-            'reservation_duration' => $faker->randomElement($allowedDurations),
-            'longitude' => 35.58017434347861,
-            'latitude' => 33.876172843516265, 
-            'address_line' => 'matn, fanar'
-        ]);
+        /** -----------------------------------------
+         *  ASSIGN 3–5 COURTS TO EACH COMPLEX
+         * ----------------------------------------*/
+        foreach ($complexes as $complex) {
 
-        Image::create([
-            'disk' => 'public',
-            'name' => 'primary',
-            'filepath' => 'https://lh3.googleusercontent.com/p/AF1QipPfm-_yU0KG_RZUKjXoXciyfn6hJUTeTGjD0SIW=w408-h306-k-no',
-            'mimetype' => 'png',
-            'width' => 500,
-            'height' => 200,
-            'filesize' => 500,
-            'owner_type' => $clutch_court::class,
-            'owner_id' => $clutch_court->id
-        ]);
+            $courtsToGenerate = rand(3, 5);
 
-        $champs_court = Court::create([
-            'complex_id' => $complexes->random()->id,
-            'court_type_id' => CourtType::where('name', CourtTypeName::BASKETBALL->value)->first()->id,
-            'surface_type_id' => SurfaceType::where('name', SurfaceTypeName::HARD_ASPHALT->value)->first()->id,
-            'name' => 'Champs Fitness Development Center',
-            'description' => 'Your premium fitness studio in Mission Bay',
-            'hourly_rate' => 30,
-            'divisible' => (bool) rand(0, 1),
-            'max_divisions' => rand(1, 4),
-            'opening_time' => '08:00:00',
-            'closing_time' => '23:00:00',
-            'reservation_duration' => $faker->randomElement($allowedDurations),
-            'longitude' => 35.52879636216507,
-            'latitude' => 33.86546653087971,
-            'address_line' => 'baabda, hazmieh'
-        ]);
+            for ($i = 0; $i < $courtsToGenerate; $i++) {
 
-        Image::create([
-            'disk' => 'public',
-            'name' => 'primary',
-            'filepath' => 'https://lh3.googleusercontent.com/gps-cs-s/AB5caB_GUb7ClrqyE0sgd8Wy6EDpuPjfKCzAEhhi27fcpRfs0POFbPMhIzd029LEBOU9q7sJufiZJkwCpl1_grivcUlRU0d3mbCub7b-knpnYRHDrN6tCGjSJVLTsT-t46k5bf1KfMhE=w408-h306-k-no',
-            'mimetype' => 'png',
-            'width' => 500,
-            'height' => 200,
-            'filesize' => 500,
-            'owner_type' => $champs_court::class,
-            'owner_id' => $champs_court->id
-        ]);
+                $template = $courtLibrary[array_rand($courtLibrary)];
+
+                $createCourt([
+                    'name' => $template['name'] . " #" . ($i + 1),
+                    'description' => $template['desc'],
+                    'hourly_rate' => $template['rate'],
+                    'court_type_id' => $courtTypes[$template['type']],
+                    'surface_type_id' => $surfaceTypes[$template['surface']],
+                    'image' => $template['img'],
+                ], $complex);
+
+            }
+        }
     }
 }

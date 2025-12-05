@@ -26,7 +26,16 @@ class ReservationController extends Controller
             abort(401, "Unauthorized");
         }
 
-        $invoice = $reservation->invoice()->with('customer')->first();
+        // Create or get existing invoice
+        $invoice = Invoice::firstOrCreate(
+            ['reservation_id' => $reservation->id],
+            [
+                'customer_id' => $reservation->customer_id,
+                'amount' => $reservation->total_price,
+                'status' => 'unpaid',
+                'due_date' => Carbon::parse($reservation->end_time)->addDays(7),
+            ]
+        )->load('customer');
 
         return Inertia::render('Reservation', [
             'reservation' => $reservation->load('customer', 'court', 'section'),

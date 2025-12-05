@@ -130,31 +130,34 @@ const formatCurrency = (value) => {
 
                 <!-- Courts Section -->
                 <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                    <!-- Courts Section Header -->
-                    <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-                        <div class="flex items-center gap-4">
-                            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                Courts
-                            </h2>
-    
-                            <!-- Search Bar -->
-                            <div class="w-full md:w-64">
-                                <SearchComponent
-                                    placeholder="Search courts..."
-                                    :search-route="`/complexes/${complex.id}`"
-                                    :initial-query="search"
-                                />
-                            </div>
-                        </div>
+                <!-- Courts Section Header -->
+                <div class="border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="flex flex-col md:flex-row items-start md:items-center gap-4 w-full md:w-auto">
+                        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            Courts
+                        </h2>
 
-                        <Link :href="`/complexes/${complex.id}/courts/create`"
-                            class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                            </svg>
-                            Add Court
-                        </Link>
+                        <!-- Search Bar -->
+                        <div class="w-full md:w-64">
+                            <SearchComponent
+                                placeholder="Search courts..."
+                                :search-route="`/complexes/${complex.id}`"
+                                :initial-query="search"
+                            />
+                        </div>
                     </div>
+
+                    <!-- Add Court Button -->
+                    <Link :href="`/complexes/${complex.id}/courts/create`"
+                        class="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors w-full md:w-auto justify-center md:justify-start"
+                    >
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Add Court
+                    </Link>
+                </div>
+
 
                     <!-- Courts Grid -->
                     <div v-if="courts.data && courts.data.length > 0" class="p-6">
