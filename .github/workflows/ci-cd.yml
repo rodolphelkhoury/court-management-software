@@ -88,8 +88,6 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate
-          php artisan config:clear
-          php artisan cache:clear
 
       # Step 10: Set up database environment variables for testing
       - name: Configure Database
@@ -100,6 +98,13 @@ jobs:
           echo "DB_DATABASE=testing" >> .env
           echo "DB_USERNAME=root" >> .env
           echo "DB_PASSWORD=password" >> .env
+          echo "CACHE_STORE=array" >> .env
+
+      # Step 10b: Clear config and cache (after DB credentials are set)
+      - name: Clear Config and Cache
+        run: |
+          php artisan config:clear
+          php artisan cache:clear
 
       # Step 11: Run database migrations
       - name: Run Migrations
