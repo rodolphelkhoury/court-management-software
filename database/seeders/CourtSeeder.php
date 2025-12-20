@@ -31,61 +31,61 @@ class CourtSeeder extends Seeder
             [
                 'name' => 'Phoenix Sports Complex – Dekwaneh',
                 'description' => 'A modern multi-sport center located in the heart of Dekwaneh with indoor and outdoor facilities.',
-                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20144217.png?csf=1&web=1&e=0VJvqb',
+                'image' => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20144217.png',
                 'lat' => 33.89244, 'lng' => 35.54401,
             ],
             [
                 'name' => 'Summit Athletic Center – Antelias',
                 'description' => 'Premium athletic venue offering basketball, padel, and tennis training.',
-                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20144333.png?csf=1&web=1&e=NplM30',
+                'image' => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20144217.png',
                 'lat' => 33.91312, 'lng' => 35.57992,
             ],
             [
                 'name' => 'Greenfield Sports Hub – Baabdat',
                 'description' => 'A nature-surrounded sports hub with high-quality turf and open-air courts.',
-                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20144843.png?csf=1&web=1&e=ebPhR9',
+                'image' => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20144217.png',
                 'lat' => 33.93142, 'lng' => 35.67111,
             ],
             [
                 'name' => 'Metro Active Arena – Sin el Fil',
                 'description' => 'Indoor and rooftop courts designed for fast-paced games and professional matches.',
-                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20145046.png?csf=1&web=1&e=dBSKUu',
+                'image' => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20144217.png',
                 'lat' => 33.88171, 'lng' => 35.52894,
             ],
             [
                 'name' => 'Horizon Sports Village – Jounieh',
                 'description' => 'A wide sports village offering football, tennis and basketball courts.',
-                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20144109.png?csf=1&web=1&e=1WYGiX',
+                'image' => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20144217.png',
                 'lat' => 33.97212, 'lng' => 35.62981,
             ],
             [
                 'name' => 'Cedars Court Center – Zalka',
                 'description' => 'A premium indoor courts center with advanced lighting and modern amenities.',
-                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20143300.png?csf=1&web=1&e=4YQRbw',
+                'image' => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20144217.png',
                 'lat' => 33.89452, 'lng' => 35.54811,
             ],
             [
                 'name' => 'North Star Sports Arena – Tripoli',
                 'description' => 'The top sports destination in North Lebanon with multiple training fields.',
-                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20143146.png?csf=1&web=1&e=s5sOlW',
+                'image' => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20144217.png',
                 'lat' => 34.43901, 'lng' => 35.83410,
             ],
             [
                 'name' => 'Legacy Sports Dome – Hazmieh',
                 'description' => 'A modern dome complex with indoor basketball, futsal, and tennis.',
-                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20142959.png?csf=1&web=1&e=SW60MU',
+                'image' => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20144217.png',
                 'lat' => 33.85831, 'lng' => 35.52941,
             ],
             [
                 'name' => 'Golden Field Club – Mansourieh',
                 'description' => 'A recently renovated sports center with premium synthetic turf courts.',
-                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20142706.png?csf=1&web=1&e=TVfcyS',
+                'image' => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20144217.png',
                 'lat' => 33.85412, 'lng' => 35.56758,
             ],
             [
                 'name' => 'Mirage Sports Park – Broummana',
                 'description' => 'Open-air courts surrounded by mountain views. Ideal for tournaments.',
-                'image' => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20145145.png?csf=1&web=1&e=qpI1Gf',
+                'image' => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20144217.png',
                 'lat' => 33.89601, 'lng' => 35.62771,
             ],
         ];
@@ -167,7 +167,7 @@ class CourtSeeder extends Seeder
                 'type' => CourtTypeName::BASKETBALL->value, 'surface' => SurfaceTypeName::HARD_ACRYLIC->value,
                 'name' => 'Arena Court', 'rate' => 18,
                 'desc' => 'Indoor basketball court with pro lighting.',
-                'img'  => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20141645.png?csf=1&web=1&e=VkxdiU'
+                'img'  => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20141645.png'
             ],
 
             // Soccer
@@ -175,7 +175,7 @@ class CourtSeeder extends Seeder
                 'type' => CourtTypeName::SOCCER->value, 'surface' => SurfaceTypeName::GRASS_SYNTHETIC->value,
                 'name' => 'Elite Turf Field', 'rate' => 22,
                 'desc' => 'Full-sized synthetic soccer field.',
-                'img'  => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20135036.png?csf=1&web=1&e=PP4TvL'
+                'img'  => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20141645.png'
             ],
 
             // Padel
@@ -183,7 +183,7 @@ class CourtSeeder extends Seeder
                 'type' => CourtTypeName::PADEL->value, 'surface' => SurfaceTypeName::SYNTHETIC_RUBBER->value,
                 'name' => 'Padel Pro Court', 'rate' => 14,
                 'desc' => 'Modern padel court with panoramic walls.',
-                'img'  => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20141840.png?csf=1&web=1&e=OuWOGg'
+                'img'  => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20141645.png'
             ],
 
             // Tennis
@@ -191,7 +191,7 @@ class CourtSeeder extends Seeder
                 'type' => CourtTypeName::TENNIS->value, 'surface' => SurfaceTypeName::HARD_ACRYLIC->value,
                 'name' => 'Grand Slam Court', 'rate' => 20,
                 'desc' => 'Professional-grade tennis court.',
-                'img'  => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20142103.png?csf=1&web=1&e=DyCkrU'
+                'img'  => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20141645.png'
             ],
 
             // Volleyball
@@ -199,7 +199,7 @@ class CourtSeeder extends Seeder
                 'type' => CourtTypeName::VOLLEYBALL->value, 'surface' => SurfaceTypeName::HARD_ASPHALT->value,
                 'name' => 'Volley Zone', 'rate' => 12,
                 'desc' => 'Training-friendly volleyball ground.',
-                'img'  => 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20142202.png?csf=1&web=1&e=41n9wU'
+                'img'  => 'https://ik.imagekit.io/rqey376md/Screenshot%202025-12-05%20141645.png'
             ],
         ];
 

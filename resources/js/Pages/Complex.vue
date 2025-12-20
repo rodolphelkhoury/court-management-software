@@ -43,10 +43,10 @@ const formatCurrency = (value) => {
                 <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                     Complex Details
                 </h2>
-                <Link :href="`/complexes/${complex.id}/edit`"
+                <!-- <Link :href="`/complexes/${complex.id}/edit`"
                     class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
                     Edit Complex
-                </Link>
+                </Link> -->
             </div>
         </template>
 
@@ -264,7 +264,7 @@ const formatCurrency = (value) => {
                                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                                         </svg>
                                     </span>
-                                </div>
+                                </div>fma
 
                                 <!-- Desktop: Full pagination -->
                                 <div class="hidden md:flex md:flex-1 md:items-center md:justify-between -mt-px">

@@ -161,10 +161,10 @@ addEvents(props.reservations);
                     Court Details
                 </h2>
                 <div class="flex gap-2">
-                    <Link :href="`/courts/${court.id}/edit`"
+                    <!-- <Link :href="`/courts/${court.id}/edit`"
                         class="px-4 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors">
                         Edit Court
-                    </Link>
+                    </Link> -->
                 </div>
             </div>
         </template>

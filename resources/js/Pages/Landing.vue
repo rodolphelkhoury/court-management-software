@@ -5,10 +5,10 @@ import { useForm } from '@inertiajs/vue3';
 // Carousel
 const currentSlide = ref(0)
 const carouselItems = ref([
-  { id: 1, title: 'Real-time Reservations', description: 'Manage bookings instantly with our intuitive interface', image: 'https://images.unsplash.com/photo-1460661419862-00a94e3a3ebc?w=600&h=400&fit=crop' },
-  { id: 2, title: 'Customer Management', description: 'Keep track of all your customers and their preferences', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop' },
-  { id: 3, title: 'Analytics & Reporting', description: 'Get insights into your business performance', image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop' },
-  { id: 4, title: 'Multi-Complex Support', description: 'Manage multiple court complexes from one platform', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=400&fit=crop' }
+  { id: 1, title: 'Real-time Reservations', description: 'Manage bookings instantly with our intuitive interface', image: 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20165801.png?csf=1&web=1&e=fgySg3' },
+  { id: 2, title: 'Reservation Details', description: 'Vue your reservation details.', image: 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20170101.png?csf=1&web=1&e=o4uxzm' },
+  { id: 3, title: 'Create Complexes', description: 'Create your complexes', image: 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20172357.png?csf=1&web=1&e=4gowkf' },
+  { id: 4, title: 'Multi-Complex Support', description: 'Manage multiple court complexes from one platform', image: 'https://testusjedu-my.sharepoint.com/:i:/r/personal/rodolph_khoury_net_usj_edu_lb/Documents/Apps/Screenshot%202025-12-05%20165531.png?csf=1&web=1&e=m2rMSN' }
 ])
 
 // Features
@@ -77,10 +77,10 @@ const steps = ref([
 
 // Team members
 const teamMembers = ref([
-  { id: 1, name: 'John Smith', role: 'CEO & Founder' },
-  { id: 2, name: 'Sarah Johnson', role: 'CTO & Co-founder' },
-  { id: 3, name: 'Mike Chen', role: 'Product Lead' },
-  { id: 4, name: 'Emma Davis', role: 'Head of Customer Success' }
+  { id: 1, name: 'Rodolph Khoury', role: 'CEO & Founder' },
+  { id: 2, name: 'Charbel Aoun', role: 'CTO & Co-founder' },
+  { id: 3, name: 'Anthony Nohra', role: 'Product Lead' },
+  { id: 4, name: 'Elie Obeid', role: 'Head of Customer Success' }
 ])
 
 // Contact Form with useForm
@@ -119,32 +119,47 @@ const submitForm = () => {
 <template>
   <div class="min-h-screen bg-white">
     <!-- Navigation Bar -->
-    <nav class="fixed w-full bg-white shadow-md z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <div class="flex items-center space-x-2">
-            <div class="w-10 h-10 bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-lg flex items-center justify-center">
-              <span class="text-white font-bold text-lg">CM</span>
-            </div>
-            <span class="text-xl font-bold text-black">CourtConnect</span>
-          </div>
-          <div class="hidden md:flex space-x-8">
-            <a href="#features" class="text-black hover:text-indigo-600 transition">Features</a>
-            <a href="#how-it-works" class="text-black hover:text-indigo-600 transition">How It Works</a>
-            <a href="#about" class="text-black hover:text-indigo-600 transition">About Us</a>
-            <a href="#sitemap" class="text-black hover:text-indigo-600 transition">Sitemap</a>
-          </div>
-          <div class="flex space-x-4">
-            <button @click="scrollToSection('contact')" class="px-4 py-2 text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 transition">
-              Contact
-            </button>
-            <a href="/login" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
-              Sign In
-            </a>
-          </div>
+<!-- Navigation Bar -->
+<nav class="fixed w-full bg-white shadow-md z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      
+      <!-- Logo -->
+      <div class="flex items-center space-x-2">
+        <div class="w-10 h-10 bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-lg">CM</span>
         </div>
+        <span class="text-xl font-bold text-black">CourtConnect</span>
       </div>
-    </nav>
+
+      <!-- Desktop Links -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="#features" class="text-black hover:text-indigo-600 transition">Features</a>
+        <a href="#how-it-works" class="text-black hover:text-indigo-600 transition">How It Works</a>
+        <a href="#about" class="text-black hover:text-indigo-600 transition">About Us</a>
+        <a href="#sitemap" class="text-black hover:text-indigo-600 transition">Home</a>
+      </div>
+
+      <!-- Responsive Buttons -->
+      <div class="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0 w-full sm:w-auto mt-2 md:mt-0">
+        <button 
+          @click="scrollToSection('contact')" 
+          class="w-full sm:w-auto px-4 py-2 text-indigo-600 border border-indigo-600 rounded-lg hover:bg-indigo-50 transition"
+        >
+          Contact
+        </button>
+        <a 
+          href="/login" 
+          class="w-full sm:w-auto px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-center"
+        >
+          Sign In
+        </a>
+      </div>
+
+    </div>
+  </div>
+</nav>
+
 
     <!-- Hero Section with Carousel -->
     <section class="pt-32 pb-20 bg-gradient-to-br from-indigo-50 to-indigo-100">
@@ -159,14 +174,14 @@ const submitForm = () => {
                 A comprehensive SaaS platform for court reservation management, customer administration, and business analytics. Streamline your operations today.
               </p>
             </div>
-            <div class="flex gap-4">
+            <!-- <div class="flex gap-4">
               <button class="px-8 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition transform hover:scale-105">
                 Get Started Free
               </button>
               <button class="px-8 py-3 border-2 border-indigo-600 text-indigo-600 rounded-lg font-semibold hover:bg-indigo-50 transition">
                 Watch Demo
               </button>
-            </div>
+            </div> -->
           </div>
 
           <!-- Carousel -->
@@ -185,7 +200,7 @@ const submitForm = () => {
               </div>
               
               <!-- Navigation Buttons -->
-              <button 
+              <!-- <button 
                 @click="prevSlide" 
                 class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 shadow-lg transition"
               >
@@ -200,7 +215,7 @@ const submitForm = () => {
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
-              </button>
+              </button> -->
               
               <!-- Indicators -->
               <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
@@ -363,9 +378,8 @@ const submitForm = () => {
           <div>
             <h4 class="text-white font-bold mb-4">Follow Us</h4>
             <div class="flex space-x-4">
-              <a href="#" class="hover:text-indigo-400 transition">Twitter</a>
-              <a href="#" class="hover:text-indigo-400 transition">LinkedIn</a>
-              <a href="#" class="hover:text-indigo-400 transition">Facebook</a>
+              <a href="https://www.linkedin.com/" class="hover:text-indigo-400 transition">LinkedIn</a>
+              <a href="https://www.facebook.com/" class="hover:text-indigo-400 transition">Facebook</a>
             </div>
           </div>
         </div>

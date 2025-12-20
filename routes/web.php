@@ -11,9 +11,13 @@ use App\Http\Controllers\SectionController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+// Route::get('/', function () {
+//     return Inertia::render('Landing');
+// })->name('landing');
+
 Route::get('/', function () {
-    return Inertia::render('Landing');
-})->name('landing');
+    return redirect()->route('complex.index');
+});
 
 // Contact form route
 Route::post('/contact/send', [MailController::class, 'sendContactEmail'])->name('contact.send');
