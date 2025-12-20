@@ -48,10 +48,15 @@ jobs:
         run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader
 
       - name: Run Laravel Pint (Style Check)
-        continue-on-error: true
+        # Blocking on main branch, non-blocking on feature branches
+        continue-on-error: ${{ github.ref != 'refs/heads/main' }}
         run: |
           ./vendor/bin/pint --test
-          echo "::notice::Pint check completed. Style issues found but not blocking CI."
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "::notice::Pint check on main branch - failures will block CI"
+          else
+            echo "::notice::Pint check on feature branch - failures are warnings only"
+          fi
 
   # ============================================
   # STAGE 2: UNIT TESTS (Fast - SQLite)
@@ -69,7 +74,7 @@ jobs:
         with:
           php-version: ${{ env.PHP_VERSION }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
-          coverage: none
+          coverage: xdebug
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -90,7 +95,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install NPM dependencies
         run: npm ci
@@ -107,8 +119,28 @@ jobs:
           echo "CACHE_STORE=array" >> .env
           php artisan config:clear
 
+      - name: Create Test Reports Directory
+        run: mkdir -p storage/test-reports
+
       - name: Run Unit Tests
-        run: php artisan test tests/Unit --parallel
+        run: php artisan test tests/Unit --parallel --log-junit storage/test-reports/junit-unit.xml --coverage --coverage-clover storage/test-reports/coverage-unit.xml
+
+      - name: Upload JUnit Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-unit-results
+          path: storage/test-reports/junit-unit.xml
+          retention-days: 30
+
+      - name: Upload Code Coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: storage/test-reports/coverage-unit.xml
+          flags: unit-tests
+          name: unit-tests-coverage
 
       - name: Upload Unit Test Logs
         if: failure()
@@ -148,7 +180,7 @@ jobs:
         with:
           php-version: ${{ env.PHP_VERSION }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, pdo_mysql, bcmath, soap, intl, gd, exif, iconv
-          coverage: none
+          coverage: xdebug
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -169,7 +201,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install NPM dependencies
         run: npm ci
@@ -197,10 +236,11 @@ jobs:
       - name: Run Migrations
         run: php artisan migrate --force
 
+      - name: Create Test Reports Directory
+        run: mkdir -p storage/test-reports
+
       - name: Run Feature Tests
-        continue-on-error: true
-        run: |
-          php artisan test tests/Feature || echo "::warning::Some feature tests failed (non-blocking for now)"
+        run: php artisan test tests/Feature --log-junit storage/test-reports/junit-feature.xml --coverage --coverage-clover storage/test-reports/coverage-feature.xml
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
@@ -209,6 +249,23 @@ jobs:
           DB_USERNAME: root
           DB_PASSWORD: password
 
+      - name: Upload JUnit Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-feature-results
+          path: storage/test-reports/junit-feature.xml
+          retention-days: 30
+
+      - name: Upload Code Coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: storage/test-reports/coverage-feature.xml
+          flags: feature-tests
+          name: feature-tests-coverage
+
       - name: Upload Feature Test Logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -216,3 +273,107 @@ jobs:
           name: feature-test-logs
           path: storage/logs/
           retention-days: 7
+
+  # ============================================
+  # STAGE 4: BUILD DOCKER IMAGE
+  # ============================================
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: [code-quality, unit-tests, feature-tests]
+    if: success()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            PHP_VERSION=${{ env.PHP_VERSION }}
+            NODE_VERSION=${{ env.NODE_VERSION }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
+      # Temp fix for growing cache
+      # https://github.com/docker/build-push-action/issues/252
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  # ============================================
+  # STAGE 5: PUSH TO REGISTRY
+  # ============================================
+  push:
+    name: Push to GitHub Container Registry
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/Pipelining')
+    
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            PHP_VERSION=${{ env.PHP_VERSION }}
+            NODE_VERSION=${{ env.NODE_VERSION }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
