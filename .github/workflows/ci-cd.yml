@@ -116,7 +116,7 @@ jobs:
 
       # Step 12: Run Pest/PHPUnit tests
       - name: Run Tests
-        run: php artisan test tests/Unit --no-interaction
+        run: php artisan test tests/Unit
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
