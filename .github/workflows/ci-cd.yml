@@ -1,0 +1,132 @@
+name: CI/CD Pipeline
+
+# Trigger the workflow on push or pull request to Pipelining branch
+on:
+  push:
+    branches:
+      - Pipelining
+  pull_request:
+    branches:
+      - Pipelining
+
+# Environment variables available to all jobs
+env:
+  PHP_VERSION: '8.2'
+  NODE_VERSION: '20'
+
+jobs:
+  # ============================================
+  # STAGE 1: TEST
+  # ============================================
+  test:
+    name: Test Stage
+    runs-on: ubuntu-latest
+    
+    # Service containers for database
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: testing
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      # Step 1: Checkout code from repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup PHP with extensions
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, pdo_mysql, bcmath, soap, intl, gd, exif, iconv
+          coverage: none
+
+      # Step 3: Get Composer cache directory
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      # Step 4: Cache Composer dependencies
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      # Step 5: Install Composer dependencies
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress --optimize-autoloader
+
+      # Step 6: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      # Step 7: Install NPM dependencies
+      - name: Install NPM dependencies
+        run: npm ci
+
+      # Step 8: Build frontend assets
+      - name: Build frontend assets
+        run: npm run build
+
+      # Step 9: Prepare Laravel environment
+      - name: Prepare Laravel Application
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php artisan config:clear
+          php artisan cache:clear
+
+      # Step 10: Set up database environment variables for testing
+      - name: Configure Database
+        run: |
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=testing" >> .env
+          echo "DB_USERNAME=root" >> .env
+          echo "DB_PASSWORD=password" >> .env
+
+      # Step 11: Run database migrations
+      - name: Run Migrations
+        run: php artisan migrate --force
+
+      # Step 12: Run Laravel Pint (code style check)
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint --test
+
+      # Step 13: Run Pest/PHPUnit tests
+      - name: Run Tests
+        run: php artisan test
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: testing
+          DB_USERNAME: root
+          DB_PASSWORD: password
+
+      # Step 14: Upload test results (optional, for debugging)
+      - name: Upload Test Results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            storage/logs/
+            tests/
+          retention-days: 7
