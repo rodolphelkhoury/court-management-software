@@ -26,6 +26,13 @@ COPY . .
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
+# Manually download and install Faker for seeders
+RUN mkdir -p /tmp/faker && \
+    cd /tmp/faker && \
+    composer require fakerphp/faker --no-interaction && \
+    cp -r /tmp/faker/vendor/fakerphp /var/www/html/vendor/ && \
+    rm -rf /tmp/faker
+
 # Install Node dependencies and build frontend assets
 RUN npm install && npm run build
 
