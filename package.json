@@ -29,6 +29,7 @@
         "@schedule-x/vue": "^2.3.1",
         "leaflet": "^1.9.4",
         "primeicons": "^7.0.0",
-        "primevue": "^4.2.2"
+        "primevue": "^4.2.2",
+        "ziggy-js": "^2.6.0"
     }
 }
