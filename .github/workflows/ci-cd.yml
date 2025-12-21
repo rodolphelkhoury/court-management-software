@@ -21,7 +21,7 @@ jobs:
   code-quality:
     name: Code Quality (Pint)
     runs-on: ubuntu-latest
-    
+     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
