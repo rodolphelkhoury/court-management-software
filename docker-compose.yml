@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # Backend Service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: court-management-backend
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=database
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-court_management}
+      - DB_USERNAME=${DB_USERNAME:-court_user}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG:-false}
+    volumes:
+      - storage_data:/var/www/html/storage/app
+      - logs_data:/var/www/html/storage/logs
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - court-network
+
+  # Database Service
+  database:
+    image: mysql:8.0
+    container_name: court-management-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE:-court_management}
+      - MYSQL_USER=${DB_USERNAME:-court_user}
+      - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-rootsecret}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - court-network
+
+# Persistent Volumes
+volumes:
+  db_data:
+    driver: local
+  storage_data:
+    driver: local
+  logs_data:
+    driver: local
+
+# Networks
+networks:
+  court-network:
+    driver: bridge

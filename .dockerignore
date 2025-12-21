@@ -1,0 +1,56 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Dependencies
+/vendor
+/node_modules
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Storage and logs
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+!/storage/logs/.gitkeep
+!/storage/framework/cache/.gitkeep
+!/storage/framework/sessions/.gitkeep
+!/storage/framework/views/.gitkeep
+
+# Testing
+/tests
+phpunit.xml
+.phpunit.result.cache
+
+# Build artifacts
+/public/hot
+/public/storage
+/public/build
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+*.md
+
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# NPM
+npm-debug.log
+yarn-error.log
